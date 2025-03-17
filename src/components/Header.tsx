@@ -1,66 +1,56 @@
 import {
   Box,
   Flex,
-  IconButton,
+  Icon,
+  Text,
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { SunIcon, MoonIcon } from "@chakra-ui/icons";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaRobot } from "react-icons/fa";
 
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const bgColor = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.800", "white");
   const borderColor = useColorModeValue("gray.200", "gray.700");
 
   return (
     <Box
       as="header"
-      position="sticky"
-      top={0}
-      zIndex={10}
       bg={bgColor}
       borderBottom="1px"
       borderColor={borderColor}
-      px={4}
       py={4}
+      px={6}
+      position="sticky"
+      top={0}
+      zIndex={10}
+      boxShadow="sm"
     >
       <Flex
-        maxW="container.xl"
-        mx="auto"
         align="center"
         justify="space-between"
+        maxW="container.xl"
+        mx="auto"
       >
-        <Box fontSize="xl" fontWeight="bold">
-          Your Name
-        </Box>
-        <Flex align="center" gap={4}>
-          <IconButton
-            aria-label="Toggle color mode"
-            icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-            onClick={toggleColorMode}
-            variant="ghost"
-            size="md"
-          />
-          <IconButton
-            aria-label="GitHub"
-            icon={<FaGithub />}
-            as="a"
-            href="https://github.com/yourusername"
-            target="_blank"
-            variant="ghost"
-            size="md"
-          />
-          <IconButton
-            aria-label="LinkedIn"
-            icon={<FaLinkedin />}
-            as="a"
-            href="https://linkedin.com/in/yourusername"
-            target="_blank"
-            variant="ghost"
-            size="md"
-          />
+        <Flex align="center" gap={3}>
+          <Icon as={FaRobot} w={8} h={8} color="blue.500" />
+          <Text
+            fontSize="xl"
+            fontWeight="bold"
+            color={textColor}
+            letterSpacing="tight"
+          >
+            Linda AI
+          </Text>
         </Flex>
+        <Text
+          fontSize="sm"
+          color="gray.500"
+          display={{ base: "none", md: "block" }}
+        >
+          Your Personal AI Assistant
+        </Text>
       </Flex>
     </Box>
   );
