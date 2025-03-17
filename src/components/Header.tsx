@@ -5,14 +5,16 @@ import {
   Text,
   useColorMode,
   useColorModeValue,
+  IconButton,
 } from "@chakra-ui/react";
-import { FaRobot } from "react-icons/fa";
+import { FaRobot, FaSun, FaMoon } from "react-icons/fa";
 
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const bgColor = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.800", "white");
   const borderColor = useColorModeValue("gray.200", "gray.700");
+  const iconColor = useColorModeValue("gray.600", "gray.300");
 
   return (
     <Box
@@ -44,13 +46,24 @@ const Header = () => {
             Linda AI
           </Text>
         </Flex>
-        <Text
-          fontSize="sm"
-          color="gray.500"
-          display={{ base: "none", md: "block" }}
-        >
-          Your Personal AI Assistant
-        </Text>
+        <Flex align="center" gap={4}>
+          <Text
+            fontSize="sm"
+            color="gray.500"
+            display={{ base: "none", md: "block" }}
+          >
+            Your Personal AI Assistant
+          </Text>
+          <IconButton
+            aria-label="Toggle color mode"
+            icon={colorMode === "light" ? <FaMoon /> : <FaSun />}
+            onClick={toggleColorMode}
+            variant="ghost"
+            color={iconColor}
+            _hover={{ bg: "transparent", color: "blue.500" }}
+            transition="all 0.2s"
+          />
+        </Flex>
       </Flex>
     </Box>
   );

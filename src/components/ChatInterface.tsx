@@ -16,6 +16,10 @@ import {
 import { FaPaperPlane, FaRobot, FaUser } from "react-icons/fa";
 import ReactMarkdown from "react-markdown";
 import { handleChat } from "../api/chat";
+import { motion, AnimatePresence } from "framer-motion";
+
+const MotionBox = motion(Box);
+const MotionFlex = motion(Flex);
 
 interface Message {
   role: "user" | "assistant";
@@ -89,8 +93,17 @@ const ChatInterface = () => {
     }
   };
 
+  const messageVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
+  };
+
   return (
-    <Box
+    <MotionBox
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
       bg={bgColor}
       borderRadius="xl"
       border="1px"
@@ -103,48 +116,63 @@ const ChatInterface = () => {
     >
       <Box flex="1" overflowY="auto" p={4}>
         <VStack spacing={4} align="stretch">
-          {messages.map((message, index) => (
-            <Flex
-              key={index}
-              justify={message.role === "user" ? "flex-end" : "flex-start"}
-              align="flex-start"
+          <AnimatePresence>
+            {messages.map((message, index) => (
+              <MotionFlex
+                key={index}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                variants={messageVariants}
+                transition={{ duration: 0.3 }}
+                justify={message.role === "user" ? "flex-end" : "flex-start"}
+                align="flex-start"
+                gap={3}
+              >
+                {message.role === "assistant" && (
+                  <Avatar
+                    size="sm"
+                    icon={<Icon as={FaRobot} />}
+                    bg="blue.500"
+                    color="white"
+                  />
+                )}
+                <MotionBox
+                  maxW="80%"
+                  bg={
+                    message.role === "user" ? userMessageBg : assistantMessageBg
+                  }
+                  p={4}
+                  borderRadius="lg"
+                  boxShadow="sm"
+                  position="relative"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ReactMarkdown>{message.content}</ReactMarkdown>
+                  <Text fontSize="xs" color="gray.500" mt={2}>
+                    {message.timestamp.toLocaleTimeString()}
+                  </Text>
+                </MotionBox>
+                {message.role === "user" && (
+                  <Avatar
+                    size="sm"
+                    icon={<Icon as={FaUser} />}
+                    bg="green.500"
+                    color="white"
+                  />
+                )}
+              </MotionFlex>
+            ))}
+          </AnimatePresence>
+          {isLoading && (
+            <MotionFlex
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              justify="flex-start"
+              align="center"
               gap={3}
             >
-              {message.role === "assistant" && (
-                <Avatar
-                  size="sm"
-                  icon={<Icon as={FaRobot} />}
-                  bg="blue.500"
-                  color="white"
-                />
-              )}
-              <Box
-                maxW="80%"
-                bg={
-                  message.role === "user" ? userMessageBg : assistantMessageBg
-                }
-                p={4}
-                borderRadius="lg"
-                boxShadow="sm"
-                position="relative"
-              >
-                <ReactMarkdown>{message.content}</ReactMarkdown>
-                <Text fontSize="xs" color="gray.500" mt={2}>
-                  {message.timestamp.toLocaleTimeString()}
-                </Text>
-              </Box>
-              {message.role === "user" && (
-                <Avatar
-                  size="sm"
-                  icon={<Icon as={FaUser} />}
-                  bg="green.500"
-                  color="white"
-                />
-              )}
-            </Flex>
-          ))}
-          {isLoading && (
-            <Flex justify="flex-start" align="center" gap={3}>
               <Avatar
                 size="sm"
                 icon={<Icon as={FaRobot} />}
@@ -154,12 +182,15 @@ const ChatInterface = () => {
               <Box bg={assistantMessageBg} p={4} borderRadius="lg">
                 <Spinner size="sm" />
               </Box>
-            </Flex>
+            </MotionFlex>
           )}
           <div ref={messagesEndRef} />
         </VStack>
       </Box>
-      <Box
+      <MotionBox
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
         p={4}
         borderTop="1px"
         borderColor={borderColor}
@@ -186,13 +217,15 @@ const ChatInterface = () => {
               isLoading={isLoading}
               disabled={!input.trim() || isLoading}
               px={6}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               <Icon as={FaPaperPlane} />
             </Button>
           </HStack>
         </form>
-      </Box>
-    </Box>
+      </MotionBox>
+    </MotionBox>
   );
 };
 
